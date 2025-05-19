@@ -52,118 +52,157 @@ function App() {
   };
 
   return (
-      <div style={styles.container}>
-        <h1 style={styles.title}>🎧 Soundfolio</h1>
+      <>
+        {/* Animated Background */}
+        <div style={styles.background}></div>
 
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <input style={styles.input} placeholder="Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
-          <input style={styles.input} placeholder="Artist" value={form.artist} onChange={e => setForm({ ...form, artist: e.target.value })} />
-          <input
-              style={styles.input}
-              type="number"
-              step="0.5"
-              min="1"
-              max="5"
-              placeholder="Rating"
-              value={form.rating}
-              onChange={e => setForm({ ...form, rating: parseFloat(e.target.value) })}
-          />
-          <input style={styles.input} placeholder="Moods (comma-separated)" value={form.moods} onChange={e => setForm({ ...form, moods: e.target.value })} />
-          <textarea style={{ ...styles.input, height: 60 }} placeholder="Review" value={form.review} onChange={e => setForm({ ...form, review: e.target.value })} />
-          <button type="submit" style={styles.button}>Add Song</button>
-        </form>
+        {/* Foreground UI */}
+        <div style={styles.container}>
+          <h1 style={styles.title}>🎧 Soundfolio</h1>
 
-        <div style={styles.filters}>
-          <input style={styles.input} placeholder="Search by artist" value={artistSearch} onChange={e => setArtistSearch(e.target.value)} />
-          <input style={styles.input} placeholder="Search by mood" value={moodSearch} onChange={e => setMoodSearch(e.target.value)} />
-          <select style={styles.select} onChange={e => setSort(e.target.value)} value={sort}>
-            <option value="">Sort: None</option>
-            <option value="newest">Newest</option>
-            <option value="top">Top Rated</option>
-          </select>
-          <button style={styles.button} onClick={fetchSongs}>Search</button>
+          <form onSubmit={handleSubmit} style={styles.form}>
+            <input style={styles.input} placeholder="Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
+            <input style={styles.input} placeholder="Artist" value={form.artist} onChange={e => setForm({ ...form, artist: e.target.value })} />
+            <input
+                style={styles.input}
+                type="number"
+                step="0.5"
+                min="1"
+                max="5"
+                placeholder="Rating"
+                value={form.rating}
+                onChange={e => setForm({ ...form, rating: parseFloat(e.target.value) })}
+            />
+            <input style={styles.input} placeholder="Moods (comma-separated)" value={form.moods} onChange={e => setForm({ ...form, moods: e.target.value })} />
+            <textarea style={{ ...styles.input, height: 60 }} placeholder="Review" value={form.review} onChange={e => setForm({ ...form, review: e.target.value })} />
+            <button type="submit" style={styles.button}>Add Song</button>
+          </form>
+
+          <div style={styles.filters}>
+            <input style={styles.input} placeholder="Search by artist" value={artistSearch} onChange={e => setArtistSearch(e.target.value)} />
+            <input style={styles.input} placeholder="Search by mood" value={moodSearch} onChange={e => setMoodSearch(e.target.value)} />
+            <select style={styles.select} onChange={e => setSort(e.target.value)} value={sort}>
+              <option value="">Sort: None</option>
+              <option value="newest">Newest</option>
+              <option value="top">Top Rated</option>
+            </select>
+            <button style={styles.button} onClick={fetchSongs}>Search</button>
+          </div>
+
+          <div style={styles.songList}>
+            {songs.map(song => (
+                <div key={song.id} style={styles.songCard}>
+                  <h3 style={styles.songTitle}>{song.title} <span style={{ fontWeight: 300 }}>by {song.artist}</span></h3>
+                  <p>⭐ {song.rating} / 5</p>
+                  <p><b>Moods:</b> {song.moods.join(', ')}</p>
+                  {song.review && <p style={styles.review}>“{song.review}”</p>}
+                </div>
+            ))}
+          </div>
         </div>
-
-        <div style={styles.songList}>
-          {songs.map(song => (
-              <div key={song.id} style={styles.songCard}>
-                <h3 style={styles.songTitle}>{song.title} <span style={{ fontWeight: 300 }}>by {song.artist}</span></h3>
-                <p>⭐ {song.rating} / 5</p>
-                <p><b>Moods:</b> {song.moods.join(', ')}</p>
-                {song.review && <p style={styles.review}>“{song.review}”</p>}
-              </div>
-          ))}
-        </div>
-      </div>
+      </>
   );
 }
 
 const styles = {
+  background: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    zIndex: 0,
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(-45deg, #f0f4f8, #e0ecf8, #f4f7fa, #dee9f7)',
+    backgroundSize: '400% 400%',
+    animation: 'gradientBG 15s ease infinite',
+    opacity: 0.7
+  },
   container: {
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    fontFamily: "'Inter', sans-serif",
+    backgroundColor: 'transparent',
+    color: '#1f2937',
     padding: 40,
     maxWidth: 900,
     margin: '0 auto',
-    color: '#333',
+    minHeight: '100vh',
+    position: 'relative',
+    zIndex: 1,
   },
   title: {
-    fontSize: 42,
-    marginBottom: 20,
-    color: '#111',
-    borderBottom: '2px solid #ddd',
-    paddingBottom: 10
+    fontSize: 36,
+    marginBottom: 30,
+    color: '#111827',
+    fontWeight: 700,
+    borderBottom: '2px solid #e5e7eb',
+    paddingBottom: 10,
   },
   form: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-    gap: 12,
-    marginBottom: 30
+    gap: 16,
+    marginBottom: 32,
+    backgroundColor: '#ffffffcc',
+    padding: 24,
+    borderRadius: 8,
+    boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
+    backdropFilter: 'blur(8px)',
   },
   input: {
     padding: 10,
-    borderRadius: 4,
-    border: '1px solid #ccc',
-    fontSize: 14
+    borderRadius: 6,
+    border: '1px solid #d1d5db',
+    fontSize: 14,
+    backgroundColor: '#fff',
+    color: '#1f2937',
   },
   button: {
-    padding: 10,
-    background: '#111',
-    color: 'white',
+    padding: 12,
+    backgroundColor: '#2563eb',
+    color: '#fff',
+    fontWeight: 600,
     border: 'none',
-    borderRadius: 4,
+    borderRadius: 6,
     cursor: 'pointer',
-    gridColumn: 'span 2'
+    gridColumn: 'span 2',
+    transition: 'background-color 0.2s ease',
   },
   filters: {
     display: 'flex',
     gap: 12,
     marginBottom: 30,
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    alignItems: 'center',
   },
   select: {
     padding: 10,
     fontSize: 14,
-    borderRadius: 4,
-    border: '1px solid #ccc'
+    borderRadius: 6,
+    border: '1px solid #d1d5db',
+    backgroundColor: '#fff',
+    color: '#1f2937',
   },
   songList: {
     display: 'grid',
-    gap: 20
+    gap: 20,
   },
   songCard: {
     padding: 20,
-    border: '1px solid #eee',
-    borderRadius: 6,
-    backgroundColor: '#fafafa',
-    boxShadow: '1px 1px 4px rgba(0,0,0,0.05)'
+    border: '1px solid #e5e7eb',
+    borderRadius: 8,
+    backgroundColor: '#ffffffcc',
+    backdropFilter: 'blur(6px)',
+    boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
   },
   songTitle: {
-    marginBottom: 4,
-    fontSize: 20
+    marginBottom: 6,
+    fontSize: 20,
+    fontWeight: 600,
+    color: '#111827',
   },
   review: {
     fontStyle: 'italic',
-    marginTop: 10
+    marginTop: 10,
+    color: '#6b7280',
   }
 };
 
